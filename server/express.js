@@ -17,7 +17,7 @@ app.use(helmet())
 app.use(cors())
 
 app.get('/', (req, res)=>{
-    res.statusCode(200).send(template())
+    res.status(200).send(template())
 })
 
 

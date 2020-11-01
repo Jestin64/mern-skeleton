@@ -1,6 +1,6 @@
 import config from "../config/config"
 import app from "./express"
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 
 
 app.listen(config.port, err => {
