@@ -7,6 +7,7 @@ router.route('/api/users')
 .get(userCtrl.list)
 .post(userCtrl.create)
 
+//needs auth
 router.route('/api/users/:userId')
 .get(userCtrl.read)
 .put(userCtrl.update)
