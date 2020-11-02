@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     salt: String,
 
 })
-
+//encryption and authentication of passwd
 userSchema.methods = {
     encryptPassword : function(password){
         if(!password) return ''
@@ -51,6 +51,7 @@ userSchema.methods = {
     }
 }
 
+
 userSchema
 .virtual('password')
 .set(function(password){
@@ -61,6 +62,17 @@ userSchema
 .get(()=>{
     return this._password
 })
+
+//validation
+userSchema.path(hashed_password)
+.validate(function(){
+    if(this._password && this._password.length < 6){
+        this.invalidate("password", "Password must be atleast 6 characters long")
+    }
+    if(this._password.isNew() && !this.password){
+        this.invalidate('password', "Password is required")
+    }
+}, null)
 
 
 
