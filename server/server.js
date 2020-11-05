@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb+srv://AaronBaron:AaronBaron@cluster0.syfka.gcp.mongodb.net/mernproject?retryWrites=true&w=majority', { useCreateIndex:true, useNewUrlParser:true, useUnifiedTopology:true })
+mongoose.connect(config.mongoUri, { useCreateIndex:true, useNewUrlParser:true, useUnifiedTopology:true })
 .then(()=>{
     console.log(`Connected to MongoDB...`)
 })

@@ -8,7 +8,6 @@ import cors from "cors"
 import template from "../template"
 import userRoutes from "./routes/user.routes"
 import authRoutes from "./routes/auth.routes"
-import { log } from "console"
 
 
 const CURRENT_WORKING_DIR = process.cwd()

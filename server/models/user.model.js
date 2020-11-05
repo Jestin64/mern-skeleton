@@ -76,9 +76,3 @@ userSchema.path('hashed_password')
 
 
 export default mongoose.model('User', userSchema)
-
-// {
-//     "name": "Aaron",
-//     "email": "aaron123@gmail.com",
-//     "password": "123456"
-// }
