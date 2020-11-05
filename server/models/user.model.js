@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import crypto from "crypto"
 
 // note : salt is a crypography method that adds additional input to the passwd to hash it,
 //to provide a safeguard vs rainbow tables that attacks hashtables
@@ -20,8 +21,6 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    updated: Date,
-
     //passwd needs to be encrypted, validated and authenticated
     // passwd field value will not be stored in the user scehema database, instead it will be handled as a virtual field
     // virtual fields do not get added to the database
@@ -30,7 +29,7 @@ const userSchema = new mongoose.Schema({
         required: 'Password is required'
     },
     salt: String,
-
+    updated: Date
 })
 //encryption and authentication of passwd
 userSchema.methods = {
@@ -44,7 +43,7 @@ userSchema.methods = {
         } catch(err) { return ''}
     },
     makeSalt : function(){
-        return Math.round((new Date.valueOf() * Math.random() )) + ''
+        return Math.round((new Date().valueOf() * Math.random() )) + ''
     },
     authenticate: function(plainText){
         return this.hashed_password === this.encryptPassword(plainText)
@@ -59,17 +58,17 @@ userSchema
     this.salt = this.makeSalt()
     this.hashed_password = this.encryptPassword(password) 
 })
-.get(()=>{
+.get(function (){
     return this._password
 })
 
 //validation
-userSchema.path(hashed_password)
-.validate(function(){
+userSchema.path('hashed_password')
+.validate(function(v){
     if(this._password && this._password.length < 6){
         this.invalidate("password", "Password must be atleast 6 characters long")
     }
-    if(this._password.isNew() && !this.password){
+    if(this.isNew && !this.password){
         this.invalidate('password', "Password is required")
     }
 }, null)
@@ -77,3 +76,9 @@ userSchema.path(hashed_password)
 
 
 export default mongoose.model('User', userSchema)
+
+// {
+//     "name": "Aaron",
+//     "email": "aaron123@gmail.com",
+//     "password": "123456"
+// }

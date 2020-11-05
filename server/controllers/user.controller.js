@@ -1,12 +1,12 @@
 import User from "../models/user.model"
-import errorHandler from "./error.controller"
-import {extend} from "lodash"
+import errorHandler from "../helpers/dbErrorHandler"
+import extend from "lodash"
 
 
 //api/users
 const list = async (req, res)=> {
     try{
-        let users = await new User.find().select('name email updated created')
+        let users = await User.find().select('name email updated created')
         return res.json(users)
     } catch(err){
         return res.status(400).json({
@@ -16,15 +16,16 @@ const list = async (req, res)=> {
 }
 
 const create = async (req, res)=> {
-    let users = new User(req.body)
+    let user = new User(req.body)
     try{
-        await users.save()
+        await user.save()
+        //console.log(`User saved : ${user.name}, ${user.email}, ${user.password}`)
         return res.status(200).json({
             message: 'Sign up successful'
         })
     } catch(err){
         return res.status(400).json({
-            error:errorHandler.getErrorMessage(err)
+            error: errorHandler.getErrorMessage(err)
         })
     }
 }
@@ -38,7 +39,7 @@ const userById = (req, res, next, id)=>{
                 error: 'User not found'
             })
         }
-        req.profile = users
+        req.profile = user
         next()
     } catch(err){
         return res.status(400).json({
@@ -54,14 +55,15 @@ const read = (req, res)=>{
     return res.json(req.profile)
 }
 
-const update = (req, res, next) => {
+const update = async (req, res, next) => {
     try {
         let user = req.profile
         user = extend(user, req.body)
-        user.save()
+        user.updated = Date.now()
+        await user.save()
         user.hashed_password = undefined
         user.salt = undefined
-        res.json(user)
+        await res.json(user)
     } catch(err){
         return res.status(400).json({
             error: errorHandler.getErrorMessage(err)    
@@ -70,7 +72,7 @@ const update = (req, res, next) => {
 } 
 
 
-const remove = (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
         let user = req.profile
         let deletedUser = await user.remove()

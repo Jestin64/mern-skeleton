@@ -8,7 +8,7 @@ router.route('/auth/signout')
 .get(authCtrl.signout)
 
 router.route('/auth/signin')
-.post(userCtrl.signin)
+.post(authCtrl.signin)
 
 
 export default router

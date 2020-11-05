@@ -1,5 +1,5 @@
 
-const getErrorHandler = function (err) {
+const getErrorMessage = function (err) {
     let message = ''
     if (err.code) {
         switch (err.code) {
@@ -11,8 +11,9 @@ const getErrorHandler = function (err) {
                 message = 'Sorry, Something went wrong'
         }
     } else {
-        if (errName in err.errors) {
-            message = err.errors[errName].message
+        for (let errName in err.errors) {
+            if(err.errors[errName].message)
+                message = err.errors[errName].message 
         }
     }
     return message
@@ -31,4 +32,4 @@ function getUniqueErrorMessage(err) {
     return output
 }
 
-export default { getErrorHandler }
+export default { getErrorMessage }
