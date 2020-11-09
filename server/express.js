@@ -8,10 +8,12 @@ import cors from "cors"
 import template from "../template"
 import userRoutes from "./routes/user.routes"
 import authRoutes from "./routes/auth.routes"
+import devBundle from "./devBundle" // use only for dev
 
 
 const CURRENT_WORKING_DIR = process.cwd()
 const app = express()
+devBundle.compile(app) // use only for dev
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded( {extended:true} ))
@@ -20,13 +22,14 @@ app.use(compression())
 app.use(helmet())
 app.use(cors())
 app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
-app.get('/', (req, res)=>{
-    res.status(200).send(template())
-})
 
 //mount routes
 app.use('/', userRoutes)
 app.use('/', authRoutes)
+
+app.get('/', (req, res)=>{
+    res.status(200).send(template())
+})
 
 //catch Unauthorized errors
 app.use((err, req, res, next)=>{  // keep this parameter syntax

@@ -9,7 +9,7 @@ mongoose.connect(config.mongoUri, { useCreateIndex:true, useNewUrlParser:true, u
     console.log(`Connected to MongoDB...`)
 })
 mongoose.connection.on('error', () => {
-    throw new Error(`unable to connect to database: ${mongoUri}`)
+    throw new Error(`unable to connect to database: ${config.mongoUri}`)
 })
 
 
